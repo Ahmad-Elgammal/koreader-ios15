@@ -1,0 +1,75 @@
+name: Sync from Upstream
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_issue_on_conflict:
+        description: 'Create issue on merge conflict'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    name: Sync upstream/master -> ios15
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout koreader-ios15
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/hezi/koreader-ios.git || true
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Merge upstream/master into ios15
+        id: merge
+        run: |
+          git checkout ios15
+          if git merge --no-edit upstream/master; then
+            echo "merged=true" >> $GITHUB_OUTPUT
+            git push origin ios15
+          else
+            echo "merged=false" >> $GITHUB_OUTPUT
+            git merge --abort
+          fi
+
+      - name: Create issue on conflict
+        if: steps.merge.outputs.merged == 'false' && github.event.inputs.create_issue_on_conflict == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issue } = await github.rest.issues.create({
+              owner: 'Ahmad-Elgammal',
+              repo: 'koreader-ios15',
+              title: '[sync-upstream] Merge conflict: upstream/master -> ios15',
+              body: 'Automatic merge of upstream/master into ios15 failed due to conflicts.\n\nPlease resolve manually:\n```\ngit checkout ios15\ngit merge upstream/master\n# resolve conflicts\ngit commit\ngit push origin ios15\n```\n\nThen re-run the sync-upstream workflow or trigger release-ipa.yml manually.',
+              labels: ['sync-conflict', 'needs-manual-merge']
+            });
+            console.log('Created issue #' + issue.number);
+
+      - name: Trigger release-ipa.yml on successful merge
+        if: steps.merge.outputs.merged == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'Ahmad-Elgammal',
+              repo: 'koreader-ios15',
+              workflow_id: 'release-ipa.yml',
+              ref: 'ios15'
+            });
+            console.log('Triggered release-ipa.yml on ios15 branch');

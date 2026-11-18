@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KOReader iOS 15 — تحميل وتثبيت</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; background: #f5f5f7; padding: 2rem; }
+    .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 16px; padding: 2.5rem; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: #1d1d1f; text-align: center; }
+    .subtitle { text-align: center; color: #6e6e73; margin-bottom: 2rem; font-size: 1.1rem; }
+    .btn { display: inline-block; background: #0071e3; color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: background 0.2s; width: 100%; text-align: center; margin-bottom: 1rem; }
+    .btn:hover { background: #005bb5; }
+    .btn-secondary { background: #34c759; }
+    .btn-secondary:hover { background: #28a745; }
+    .btn-outline { background: transparent; border: 2px solid #0071e3; color: #0071e3; }
+    .btn-outline:hover { background: #0071e3; color: white; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .card { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 12px; padding: 1.5rem; }
+    .card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #1d1d1f; }
+    .card p { font-size: 0.95rem; color: #6e6e73; margin-bottom: 1rem; }
+    .sha-box { background: #f0f0f0; border: 1px solid #d1d1d1; border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.85rem; word-break: break-all; margin: 1rem 0; direction: ltr; text-align: left; }
+    .faq { margin-top: 2rem; }
+    .faq details { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; margin-bottom: 0.5rem; }
+    .faq summary { cursor: pointer; font-weight: 600; color: #1d1d1f; }
+    .faq p { margin-top: 0.5rem; color: #6e6e73; font-size: 0.95rem; }
+    .version { text-align: center; color: #6e6e73; font-size: 0.9rem; margin-top: 2rem; }
+    .notice { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; color: #856404; font-size: 0.9rem; }
+    .notice strong { color: #856404; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>KOReader iOS 15</h1>
+    <p class="subtitle">إصدار مخصص لـ iOS 15.0 – 15.8.8 وما بعده — يعمل على iPhone 7 / iPad mini 4 / iPad 7</p>
+
+    <div class="notice">
+      <strong>⚠️ بناء غير رسمي (Unofficial Build):</strong> هذا بناء مجتمع لـ KOReader، مرخص تحت <a href="https://github.com/koreader/koreader/blob/master/COPYING" target="_blank">AGPL-3.0</a>. الكود المصدري متاح في <a href="https://github.com/Ahmad-Elgammal/koreader-ios15/tree/ios15" target="_blank">فرع ios15</a>.
+    </div>
+
+    <a href="https://github.com/Ahmad-Elgammal/koreader-ios15/releases/latest" class="btn" target="_blank" rel="noopener">📥 تحميل أحدث IPA (Final)</a>
+    <a href="https://github.com/Ahmad-Elgammal/koreader-ios15/releases/tag/v2026.11-ios15" class="btn btn-outline" target="_blank" rel="noopener">عرض ملاحظات الإصدار الكاملة</a>
+
+    <div class="sha-box">
+      <strong>sha256 (Final):</strong> 27067d97aa8942827704e7a9f58479ff686b9bcf7a1021d85fa19ca85cdacbcd<br>
+      <strong>sha256 (Debug v10):</strong> 8a1dcdf505b0a075c586afd2833c0e523a0f18ce05da5e29acb1abd350d7f04a
+    </div>
+
+    <h2 style="margin: 2rem 0 1rem;">طرق التثبيت</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h3>📱 TrollStore (الأفضل لـ iOS 15.x)</h3>
+        <p>تثبيت دائم بدون شهادة مطور. لا يحتاج إعادة توقيع.</p>
+        <a href="https://github.com/opa334/TrollStore" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size: 0.9rem; padding: 0.6rem 1rem;">دليل TrollStore</a>
+      </div>
+      <div class="card">
+        <h3>🖥️ Sideloadly</h3>
+        <p>تثبيت عبر الكمبيوتر (Windows/Mac/Linux) باستخدام Apple ID مجاني. صالح لـ 7 أيام.</p>
+        <a href="https://sideloadly.io/" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size: 0.9rem; padding: 0.6rem 1rem;">موقع Sideloadly</a>
+      </div>
+      <div class="card">
+        <h3>📲 AltStore</h3>
+        <p>متجر بديل يُثبت ذاتياً على الجهاز. يحتاج Apple ID مجاني، صالح لـ 7 أيام.</p>
+        <a href="https://altstore.io/" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size: 0.9rem; padding: 0.6rem 1rem;">موقع AltStore</a>
+      </div>
+    </div>
+
+    <div class="faq">
+      <h2 style="margin-bottom: 1rem;">❓ الأسئلة الشائعة</h2>
+      <details>
+        <summary>لماذا توجد ملفان IPA؟ ما الفرق؟</summary>
+        <p><strong>KOReader-ios15-final.ipa</strong> — البناء النظيف النهائي: JIT ممكّن، لا تشخيصات، للاستخدام اليومي.<br>
+        <strong>KOReader-ios15-v10.ipa</strong> — بناء تصحيح أخطاء (debug): يحتوي حلقات FFI + تفريغ حالة العطل. <strong>للاستكشاف فقط</strong> — إذا واجهت عطلاً جديداً، ثبّت هذا الإصدار وأرسل <code>boot.log</code>.</p>
+      </details>
+      <details>
+        <summary>التطبيق يعمل 7 أيام ثم يتوقف عن الفتح (Sideloadly/AltStore)</summary>
+        <p>الشهادة المجانية من Apple تنتهي بعد 7 أيام. الحل: أعد تثبيت التطبيق عبر Sideloadly/AltStore كل أسبوع، أو استخدم <strong>TrollStore</strong> للتثبيت الدائم (متاح على iOS 15.x).</p>
+      </details>
+      <details>
+        <summary>شاشة سوداء أو عطل فوري عند الفتح</summary>
+        <p>1. تأكد أنك على iOS 15.0 أو أحدث.<br>2. جرب بناء التصحيح <strong>v10</strong> — إذا عمل، المشكلة في تحسينات JIT.<br>3. افتح <code>Files.app → On My iPhone → KOReader → boot.log</code> وأرسل المحتوى في <a href="https://github.com/Ahmad-Elgammal/koreader-ios15/issues" target="_blank" rel="noopener">Issue</a>.</p>
+      </details>
+      <details>
+        <summary>تحذيرات غير ضارة في السجلات (يمكن تجاهلها)</summary>
+        <p>قد تظهر في <code>boot.log</code> أو وحدة التحكم:<br>
+        • <code>android module not found</code> — وحدة أندرويد اختيارية، لا تؤثر على iOS.<br>
+        • <code>/dev/ptmx: Operation not permitted</code> — محاولة وصول لجهاز طرفي غير متاح في الساندبوكس.<br>
+        • <code>Unbalanced transitions</code> — تحذير UIKit داخلي عند تداخل حركات انتقالية، لا يسبب عطلاً.<br>
+        هذه <strong>طبيعية</strong> ولا تؤثر على القراءة.</p>
+      </details>
+      <details>
+        <summary>كيف أتحقق من سلامة الملف؟</summary>
+        <p>بعد التحميل، في التيرمينال:<br>
+        <code>shasum -a 256 KOReader-ios15-final.ipa</code><br>
+        يجب أن يطابق: <code>27067d97aa8942827704e7a9f58479ff686b9bcf7a1021d85fa19ca85cdacbcd</code></p>
+      </details>
+    </div>
+
+    <p class="version">الإصدار: v2026.11-ios15 · الهدف: iOS 15.0+ · المصدر: <a href="https://github.com/Ahmad-Elgammal/koreader-ios15" target="_blank" rel="noopener">Ahmad-Elgammal/koreader-ios15</a></p>
+  </div>
+</body>
+</html>

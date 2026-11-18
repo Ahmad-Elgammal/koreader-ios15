@@ -1,0 +1,90 @@
+name: Build & Release IPA
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-ipa:
+    name: Build IPA (macOS)
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout koreader-ios15
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up GNU tools in PATH
+        run: |
+          echo "$(brew --prefix)/opt/findutils/libexec/gnubin" >> $GITHUB_PATH
+          echo "$(brew --prefix)/opt/gnu-getopt/bin" >> $GITHUB_PATH
+          echo "$(brew --prefix)/opt/make/libexec/gnubin" >> $GITHUB_PATH
+          echo "$(brew --prefix)/opt/util-linux/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: |
+          brew install cmake ninja pkg-config SDL3
+
+      - name: Build base (monolibtic + luajit + sqlite + deps)
+        run: |
+          cd koreader-ios
+          make TARGET=ios base > build_base.log 2>&1
+          echo "BASE_EXIT=$?"
+          grep -c 'error:' build_base.log || true
+
+      - name: Build KOReader app (xcodebuild)
+        run: |
+          cd koreader-ios
+          xcodebuild -project KOReader.xcodeproj -scheme KOReader -configuration Release \
+            -destination "generic/platform=iOS" \
+            ARCHS=arm64 ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build > build_app.log 2>&1
+          echo "XCODE_EXIT=$?"
+
+      - name: Package IPA
+        run: |
+          cd koreader-ios
+          APP_DIR=$(find ~/Library/Developer/Xcode/DerivedData -name "KOReader.app" -path "*/Release-iphoneos/*" | head -1)
+          if [ -z "$APP_DIR" ]; then
+            echo "ERROR: KOReader.app not found"
+            exit 1
+          fi
+          echo "Found app at: $APP_DIR"
+          rm -rf stage && mkdir -p stage/Payload
+          cp -R "$APP_DIR" stage/Payload/KOReader.app
+          cd stage && zip -qry ../KOReader-ios15-${{ github.ref_name }}.ipa Payload && cd ..
+          ls -lh KOReader-ios15-${{ github.ref_name }}.ipa
+          shasum -a 256 KOReader-ios15-${{ github.ref_name }}.ipa > sha256.txt
+          cat sha256.txt
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            KOReader-ios15-${{ github.ref_name }}.ipa
+            sha256.txt
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+
+      - name: Upload IPA as artifact (for workflow_dispatch)
+        uses: actions/upload-artifact@v4
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          name: KOReader-ios15-${{ github.ref_name }}-ipa
+          path: |
+            koreader-ios/KOReader-ios15-${{ github.ref_name }}.ipa
+            koreader-ios/sha256.txt
+          retention-days: 30
+
+    env:
+      PATH: "$(brew --prefix)/opt/findutils/libexec/gnubin:$(brew --prefix)/opt/gnu-getopt/bin:$(brew --prefix)/opt/make/libexec/gnubin:$(brew --prefix)/opt/util-linux/bin:${{ env.PATH }}"
