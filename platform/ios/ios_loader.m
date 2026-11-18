@@ -15,6 +15,7 @@
 #import <Foundation/Foundation.h>
 
 #include <SDL3/SDL_main.h>
+#include <SDL3/SDL_log.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,8 +31,17 @@
 #define LANGUAGE "en_US.UTF-8"
 #define LUA_ERROR "failed to run lua chunk: %s\n"
 
+static void ko_log(void *ud, int cat, SDL_LogPriority pri, const char *msg) {
+    fprintf(stderr, "[SDL] %s\n", msg);
+    fflush(stderr);
+}
+
 int main(int argc, char *argv[]) {
     @autoreleasepool {
+        /* --- SDL log callback --- */
+        SDL_SetLogPriorities(SDL_LOG_PRIORITY_VERBOSE);
+        SDL_SetLogOutputFunction(ko_log, NULL);
+
         NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
         if (!resourcePath) {
             fprintf(stderr, "[%s]: NSBundle resourcePath is nil\n", LOGNAME);

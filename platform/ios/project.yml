@@ -2,7 +2,7 @@ name: KOReader
 options:
   bundleIdPrefix: rocks.koreader
   deploymentTarget:
-    iOS: "14.0"
+    iOS: "15.0"
   createIntermediateGroups: true
   developmentLanguage: en
   # The project lives at the repo root so paths in `sources`/`scripts`
@@ -17,14 +17,18 @@ settings:
     SUPPORTED_PLATFORMS: iphoneos
     ONLY_ACTIVE_ARCH: YES
     ARCHS: arm64
-    VALID_ARCHS: arm64
-    IPHONEOS_DEPLOYMENT_TARGET: "14.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
     # Personal team / free-cert signing: leave team blank so each user
     # can fill it in via the Xcode UI. Manual style avoids the
     # capabilities-spam Xcode does under Automatic.
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: ""
     PRODUCT_NAME: KOReader
+    # Prevent dead code stripping from removing dlsym-bridge symbols
+    # (ko_ios_* functions only referenced from Lua via ffi.load/dlsym).
+    DEAD_CODE_STRIPPING: NO
+    # Disable LTO to prevent internalization of dlsym-visible symbols
+    LLVM_LTO: NO
 
 targets:
   KOReader:
@@ -46,14 +50,20 @@ targets:
         # produced by `make TARGET=ios base`. The pre-build script makes
         # sure that's up-to-date before we start compiling.
         HEADER_SEARCH_PATHS:
-          - $(SRCROOT)/base/build/arm64-apple-ios14.0/staging/include
-          - $(SRCROOT)/base/build/arm64-apple-ios14.0/staging/include/luajit-2.1
+          - $(SRCROOT)/base/build/arm64-apple-ios15.0/staging/include
+          - $(SRCROOT)/base/build/arm64-apple-ios15.0/staging/include/luajit-2.1
         LIBRARY_SEARCH_PATHS:
-          - $(SRCROOT)/base/build/arm64-apple-ios14.0/libs
-          - $(SRCROOT)/base/build/arm64-apple-ios14.0/staging/lib
+          - $(SRCROOT)/base/build/arm64-apple-ios15.0/libs
+          - $(SRCROOT)/base/build/arm64-apple-ios15.0/staging/lib
         OTHER_LDFLAGS:
           - -lluajit
           - -lSDL3
+          # Force retention of ko_ios_* bridge symbols
+          # (referenced from Lua via dlsym).
+          - -Wl,-u,_ko_ios_pick_folder_start
+          - -Wl,-u,_ko_ios_pick_folder_poll
+          - -Wl,-u,_ko_ios_get_safe_area_pixels
+          - -Wl,-u,_ko_ios_resolve_bookmark
         # rpath so dyld finds the dylibs we copy into app/libs at post-build.
         LD_RUNPATH_SEARCH_PATHS:
           - $(inherited)
